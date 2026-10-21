@@ -1,5 +1,9 @@
 """Main MCP server for browser automation."""
 
+import warnings
+warnings.filterwarnings("ignore")
+warnings.simplefilter("ignore")
+
 import asyncio
 import base64
 import importlib
@@ -1781,7 +1785,7 @@ async def hot_reload() -> str:
     Returns:
         str: Status message.
     """
-    global browser_manager, network_interceptor, dom_handler, debug_logger
+    global browser_manager, network_interceptor, dom_handler, debug_logger, cdp_function_executor
     try:
         active_instances = await browser_manager.list_instances()
         if active_instances:
@@ -1793,6 +1797,7 @@ async def hot_reload() -> str:
             'browser_manager',
             'network_interceptor',
             'dom_handler',
+            'cdp_function_executor',
             'debug_logger',
             'models'
         ]
@@ -1810,6 +1815,8 @@ async def hot_reload() -> str:
                     network_interceptor = sys.modules['network_interceptor'].NetworkInterceptor()
                 elif module_name == 'dom_handler':
                     dom_handler = sys.modules['dom_handler'].DOMHandler()
+                elif module_name == 'cdp_function_executor':
+                    cdp_function_executor = sys.modules['cdp_function_executor'].CDPFunctionExecutor()
                 elif module_name == 'debug_logger':
                     debug_logger = sys.modules['debug_logger'].debug_logger
         return f"Hot reload completed. Reloaded modules: {', '.join(reloaded_modules)}"

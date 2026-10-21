@@ -158,6 +158,8 @@ class CDPFunctionExecutor:
         cdp_domains = {
             "runtime": uc.cdp.runtime,
             "page": uc.cdp.page,
+            "input": uc.cdp.input_,
+            "input_": uc.cdp.input_,
         }
         raw_command = command.strip()
         explicit_domain = None
@@ -194,7 +196,7 @@ class CDPFunctionExecutor:
                 raise ValueError(f"Unknown CDP command: {command}")
             if cdp_domain == "page":
                 await self.enable_page(tab)
-            else:
+            elif cdp_domain == "runtime":
                 await self.enable_runtime(tab)
             result = await tab.send(cdp_method(**params))
             debug_logger.log_info("cdp_function_executor", "execute_cdp_command", f"Executed {command} with params: {params}")
